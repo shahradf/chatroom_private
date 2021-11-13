@@ -17,8 +17,8 @@ class Server:
         self.s.bind((host, port))
         self.s.listen(100)
 
-        print('Running on host: ' + str(host))
-        print('Running on port: ' + str(port))
+        print('running on host: ' + str(host))
+        print('running on port: ' + str(port))
 
         self.username_lookup = {}
 
@@ -54,7 +54,7 @@ class Server:
                 break
 
             if msg.decode() != '':
-                print('New message: ' + str(msg.decode()))
+                print('new message: ' + str(msg.decode()))
                 for connection in self.clients:
                     if connection != c:
                         connection.send(msg)
