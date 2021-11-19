@@ -1,5 +1,72 @@
 import socket
 import threading
+from peewee import *
+from os import system
+from sys import stdout
+from time import sleep
+from sys import exit
+from platform import system as osname
+
+
+def clear():
+    if osname == 'nt':
+        system('cls')
+    else:
+        system('clear')
+
+
+def slow_print(vorody):
+    for c in vorody + '\n':
+        stdout.write(c)
+        stdout.flush()
+        sleep(10. / 100)
+
+
+def banner():
+    print('''
+    [] -> clear(-)
+    [] -> cmd(...)
+    [] -> cmd_r(...)
+    [] -> mute(...)
+    [] -> kick(...)
+    [] -> ban(...)
+    ''')
+
+
+def server_manager():
+    while True:
+        message_s = input('')
+
+
+user_login = input('username : ')
+password_login = input('password : ')
+if user_login == 'shahrad8b':
+    if password_login == 'login("/w let me in mosi")':
+        slow_print('welcome shahrad')
+    else:
+        print('password is wrong')
+        exit(0)
+else:
+    print('username is wrong')
+    exit(0)
+clear()
+
+db = SqliteDatabase('people.db')
+
+
+class Person(Model):
+    id = AutoField()
+    username = CharField(max_length=24)
+    password = CharField(max_length=256)
+
+    class Meta:
+        database = db
+
+
+db.connect()
+db.create_tables([
+    Person
+])
 
 
 class Server:
@@ -26,15 +93,26 @@ class Server:
             c, addr = self.s.accept()
 
             username = c.recv(1024).decode()
-            user_up = c.recv(1024).decode()
-            print(f'new connection ip and username: {user_up} -- {str(username)}')
-            self.broadcast(f'{username} connected')
+            password = c.recv(1024).decode()
+            user_ip = c.recv(1024).decode()
 
-            self.username_lookup[c] = username
+            user_db = Person.select().where(Person.username == username)
+            if user_db:
+                user_db = user_db[-1]
+                if password == user_db.password:
+                    print(f'new connection ip and username: {user_ip} -- {str(username)}')
+                    self.broadcast(f'{username} connected')
 
-            self.clients.append(c)
+                    self.username_lookup[c] = username
 
-            threading.Thread(target=self.handle_client, args=(c, addr,)).start()
+                    self.clients.append(c)
+                    print(self.clients)
+
+                    threading.Thread(target=self.handle_client, args=(c, addr,)).start()
+                else:
+                    c.send('exit("idont know what shuld i say:?.")'.encode())
+            else:
+                c.send('exit("idont know what shuld i say:?.")'.encode())
 
     def broadcast(self, msg):
         for connection in self.clients:
@@ -61,3 +139,4 @@ class Server:
 
 
 server = Server()
+banner()

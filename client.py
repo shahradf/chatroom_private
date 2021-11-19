@@ -21,14 +21,20 @@ class Client:
 
         self.username = input('enter username : ')
         self.s.send(self.username.encode())
+        self.password = input('enter password : ')
+        self.s.send(self.password.encode())
         self.my_ip = socket.gethostbyname(socket.gethostname())
         self.s.send(self.my_ip.encode())
+        check = self.s.recv(1024).decode()
+        if check == 'exit("idont know what shuld i say:?.")':
+            print('username or password wrong .')
+            exit(0)
+        else:
+            message_handler = threading.Thread(target=self.handle_messages, args=())
+            message_handler.start()
 
-        message_handler = threading.Thread(target=self.handle_messages, args=())
-        message_handler.start()
-
-        input_handler = threading.Thread(target=self.input_handler, args=())
-        input_handler.start()
+            input_handler = threading.Thread(target=self.input_handler, args=())
+            input_handler.start()
 
     def handle_messages(self):
         while True:
