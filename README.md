@@ -32,12 +32,12 @@ Usage
 
     Start the Server:
 
-python server.py
+    python server.py
 
-The server will prompt for an administrator username and password. Enter the credentials to proceed.
+    The server will prompt for an administrator username and password. Enter the credentials to proceed.
 
-Start the Client:
+    Start the Client:
 
-python client.py
+    python client.py
 
-The client will prompt for the server's host and port, followed by the username and password. Enter the credentials to connect to the chatroom.
+    The client will prompt for the server's host and port, followed by the username and password. Enter the credentials to connect to the chatroom.
