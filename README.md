@@ -17,8 +17,8 @@ Installation
 
     Clone the Repository:
 
-git clone https://github.com/shahradf/chatroom_private
-cd chatroom_private
+    git clone https://github.com/shahradf/chatroom_private
+    cd chatroom_private
 
 Install Dependencies:
 
